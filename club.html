@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pétanque Club</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+      }
+      header {
+        background-color: #35424a;
+        color: #ffffff;
+        padding: 10px 0;
+        text-align: center;
+      }
+      nav ul {
+        display: flex;
+        justify-content: center;
+        list-style: none;
+        padding: 0;
+      }
+      nav ul li {
+        margin: 0 15px;
+      }
+      nav ul li a {
+        color: white;
+        text-decoration: none;
+      }
+      .container {
+        width: 80%;
+        margin: auto;
+        overflow: hidden;
+      }
+      footer {
+        background-color: #35424a;
+        color: #ffffff;
+        text-align: center;
+        padding: 10px 0;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+      }
+      h1 {
+        color: #35424a;
+      }
+      .admin-nav {
+        display: flex;
+        justify-content: space-around;
+        margin: 20px 0;
+      }
+      .admin-nav a {
+        padding: 10px 20px;
+        background-color: #35424a;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+      }
+      .admin-nav a:hover {
+        background-color: #2c3e50;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+      }
+      table,
+      th,
+      td {
+        border: 1px solid #ddd;
+      }
+      th,
+      td {
+        padding: 10px;
+        text-align: center;
+      }
+      th {
+        background-color: #35424a;
+        color: white;
+      }
+      td a {
+        text-decoration: none;
+        color: #35424a;
+      }
+      td a:hover {
+        text-decoration: underline;
+      }
+      .form-group {
+        margin: 15px 0;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+      }
+      input[type='text'],
+      input[type='number'],
+      input[type='date'],
+      textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+      }
+      button {
+        padding: 10px 20px;
+        background-color: #35424a;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #2c3e50;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Pétanque Club</h1>
+      <nav>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Admin</a></li>
+          <li><a href="#">Events</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <section id="home">
+        <h1>Welcome to the Pétanque Club</h1>
+        <p>
+          Join us in the fun and competitive world of pétanque! Whether you are
+          a seasoned player or just starting out, our club offers events and
+          competitions for all skill levels.
+        </p>
+      </section>
+
+      <!-- Admin Section -->
+      <section id="admin">
+        <h2>Admin Dashboard</h2>
+        <div class="admin-nav">
+          <a href="#manage-members">Manage Members</a>
+          <a href="#manage-events">Manage Events</a>
+          <a href="#manage-scores">Manage Scores</a>
+        </div>
+      </section>
+
+      <!-- Manage Members -->
+      <section id="manage-members">
+        <h2>Manage Members</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>John Doe</td>
+              <td>john@example.com</td>
+              <td><a href="#">Edit</a> | <a href="#">Delete</a></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Jane Doe</td>
+              <td>jane@example.com</td>
+              <td><a href="#">Edit</a> | <a href="#">Delete</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Manage Events -->
+      <section id="manage-events">
+        <h2>Manage Events</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Event Name</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Summer Tournament</td>
+              <td>2024-07-12</td>
+              <td><a href="#">Edit</a> | <a href="#">Delete</a></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Winter League</td>
+              <td>2024-12-05</td>
+              <td><a href="#">Edit</a> | <a href="#">Delete</a></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Add New Event</h3>
+        <form>
+          <div class="form-group">
+            <label for="eventName">Event Name</label>
+            <input
+              type="text"
+              id="eventName"
+              name="eventName"
+              placeholder="Enter event name"
+            />
+          </div>
+          <div class="form-group">
+            <label for="eventDate">Event Date</label>
+            <input type="date" id="eventDate" name="eventDate" />
+          </div>
+          <button type="submit">Add Event</button>
+        </form>
+      </section>
+
+      <!-- Manage Scores -->
+      <section id="manage-scores">
+        <h2>Manage Scores</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Match ID</th>
+              <th>Player 1</th>
+              <th>Player 2</th>
+              <th>Score</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>John Doe</td>
+              <td>Jane Doe</td>
+              <td>13-7</td>
+              <td><a href="#">Edit</a> | <a href="#">Delete</a></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Add New Score</h3>
+        <form>
+          <div class="form-group">
+            <label for="player1">Player 1</label>
+            <input
+              type="text"
+              id="player1"
+              name="player1"
+              placeholder="Enter player 1"
+            />
+          </div>
+          <div class="form-group">
+            <label for="player2">Player 2</label>
+            <input
+              type="text"
+              id="player2"
+              name="player2"
+              placeholder="Enter player 2"
+            />
+          </div>
+          <div class="form-group">
+            <label for="score">Score</label>
+            <input
+              type="text"
+              id="score"
+              name="score"
+              placeholder="Enter score (e.g. 13-7)"
+            />
+          </div>
+          <button type="submit">Add Score</button>
+        </form>
+      </section>
+    </div>
+
+    <footer>
+      <p>Pétanque Club &copy; 2024</p>
+    </footer>
+  </body>
+</html>

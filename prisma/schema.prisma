@@ -1,0 +1,74 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Profile {
+  id              String     @id @default(uuid())
+  clerkId         String     @unique
+  firstName       String
+  lastName        String
+  username        String
+  email           String
+  profileImage    String
+  properties      Property[]
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  sourceFavorites Favorite[] @relation("source")
+  reviews         Review[]   @relation("reviews")
+}
+
+model Property {
+  id              String     @id @default(uuid())
+  name            String
+  tagline         String
+  category        String
+  image           String
+  country         String
+  description     String
+  price           Int
+  guests          Int
+  bedrooms        Int
+  beds            Int
+  baths           Int
+  amenities       String
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  profile         Profile    @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
+  profileId       String
+  targetFavorites Favorite[] @relation("target")
+  reviews         Review[]   @relation("reviews")
+}
+
+model Favorite {
+  clerkId String
+  profile Profile @relation("source", fields: [clerkId], references: [clerkId], onDelete: Cascade)
+
+  propertyId String
+  property   Property @relation("target", fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@id([clerkId, propertyId])
+}
+
+model Review {
+  clerkId    String
+  profile    Profile  @relation("reviews", fields: [clerkId], references: [clerkId], onDelete: Cascade)
+  text       String
+  rate       Int
+  propertyId String
+  property   Property @relation("reviews", fields: [propertyId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@id([clerkId, propertyId])
+}
