@@ -1,16 +1,17 @@
-"use server"
+'use server'
 
-import { ActionSubmissionResult, SearchRental } from "@/types"
+import { ActionSubmissionResult, SearchRental } from '@/types'
 import {
   imageSchema,
   propertySchema,
   PropertySchema,
-} from "@/zod-schemas/propertySchema"
-import { Prisma, Property } from "@prisma/client"
-import { getLoggedUser, isLogged } from "./clerk-utils"
-import prisma from "@/utils/db"
-import { base64ToFile } from "@/lib/utils"
-import { deleteImage, uploadImage } from "@/utils/supabase"
+} from '@/zod-schemas/propertySchema'
+import { Prisma, Property } from '@prisma/client'
+import { getLoggedUser, isLogged } from './clerk-utils'
+import prisma from '@/utils/db'
+import { base64ToFile } from '@/lib/utils'
+import { deleteImage, uploadImage } from '@/utils/supabase'
+import { count } from 'console'
 
 /**
  * create a property for a rental
@@ -25,7 +26,7 @@ export async function createProperty(
     const user = await getLoggedUser()
     const validated = propertySchema.safeParse(data)
     if (validated.error) {
-      return { status: "error", errors: validated.error.errors }
+      return { status: 'error', errors: validated.error.errors }
     }
 
     let imageUrl = validated.data.image
@@ -34,7 +35,7 @@ export async function createProperty(
         null,
         validated.data.image
       )
-      if (imgValidation.status === "error") {
+      if (imgValidation.status === 'error') {
         return imgValidation
       }
       imageUrl = imgValidation.data!
@@ -54,7 +55,7 @@ export async function createProperty(
       data: propertyData,
     })
 
-    return { status: "success", data: newProperty }
+    return { status: 'success', data: newProperty }
   } catch (error) {
     console.error(error)
     throw error
@@ -94,17 +95,17 @@ export async function deleteProperty(propertyId: string) {
 export async function fetchProperties(
   {
     category,
-    search = "",
+    search = '',
     pageNumber = 1,
     pageSize,
-    orderBy = "createdAt",
+    orderBy = 'createdAt',
   }: SearchRental,
-  screen: "home" | "favorite" = "home"
+  screen: 'home' | 'favorite' = 'home'
 ) {
   try {
     const user = await isLogged()
     let favoriteIds: string[] = []
-    if (user && screen === "favorite") {
+    if (user && screen === 'favorite') {
       favoriteIds = (await getFavoriteProperties()).map((fp) => fp.propertyId)
     }
     const calculatedSize = pageSize
@@ -114,7 +115,7 @@ export async function fetchProperties(
     const count = await prisma.property.count({
       where: {
         ...(category ? { category } : {}),
-        ...(screen === "favorite"
+        ...(screen === 'favorite'
           ? {
               id: {
                 in: favoriteIds,
@@ -122,8 +123,8 @@ export async function fetchProperties(
             }
           : {}),
         OR: [
-          { name: { contains: search, mode: "insensitive" } },
-          { tagline: { contains: search, mode: "insensitive" } },
+          { name: { contains: search, mode: 'insensitive' } },
+          { tagline: { contains: search, mode: 'insensitive' } },
         ],
       },
     })
@@ -131,7 +132,7 @@ export async function fetchProperties(
     const properties = await prisma.property.findMany({
       where: {
         ...(category ? { category } : {}),
-        ...(screen === "favorite"
+        ...(screen === 'favorite'
           ? {
               id: {
                 in: favoriteIds,
@@ -139,8 +140,8 @@ export async function fetchProperties(
             }
           : {}),
         OR: [
-          { name: { contains: search, mode: "insensitive" } },
-          { tagline: { contains: search, mode: "insensitive" } },
+          { name: { contains: search, mode: 'insensitive' } },
+          { tagline: { contains: search, mode: 'insensitive' } },
         ],
       },
       select: {
@@ -153,7 +154,7 @@ export async function fetchProperties(
       },
 
       orderBy: {
-        [orderBy]: "desc",
+        [orderBy]: 'desc',
       },
       skip: (pageNumber - 1) * calculatedSize,
       take: calculatedSize,
@@ -256,32 +257,32 @@ async function validatePropertyImage(
 
     if (!dataImageUrl) {
       console.log(
-        "case 1: there is no image provided, delete saved property image"
+        'case 1: there is no image provided, delete saved property image'
       )
       // case 1: there is no image provided, delete saved property image
       if (savedPropertyImage?.name) {
         await deletePropertyImage(savedPropertyImage.name)
       }
-      return { status: "success", data: undefined }
+      return { status: 'success', data: undefined }
     } else if (dataImageUrl.startsWith(process.env.SUPABASE_URL!)) {
       console.log("ase 2: image doesn't not changed")
       // case 2: image doesn't not changed
-      return { status: "success", data: dataImageUrl }
+      return { status: 'success', data: dataImageUrl }
     } else {
-      console.log("case 3: a new base 64 image was uploaded")
+      console.log('case 3: a new base 64 image was uploaded')
       // case 3: a new base 64 image was uploaded
-      const imageType = dataImageUrl.slice(5, dataImageUrl.indexOf(";"))
+      const imageType = dataImageUrl.slice(5, dataImageUrl.indexOf(';'))
       const imageFile = base64ToFile(
         dataImageUrl,
-        `property-image.${imageType.slice("image/".length)}`
+        `property-image.${imageType.slice('image/'.length)}`
       )
       const imgValidation = imageSchema.safeParse(imageFile)
       if (imgValidation.error) {
         return {
-          status: "error",
+          status: 'error',
           errors: imgValidation.error.errors.map((e) => ({
             ...e,
-            path: ["name"],
+            path: ['name'],
           })),
         }
       }
@@ -291,7 +292,7 @@ async function validatePropertyImage(
       }
       // upload image to supabase bucket
       const urlImage = await uploadImgToStorage(imageFile)
-      return { status: "success", data: urlImage }
+      return { status: 'success', data: urlImage }
     }
   } catch (error) {
     console.error(error)
@@ -347,5 +348,32 @@ export async function fetchOneProperty(id: string) {
   } catch (error) {
     console.error(error)
     throw error
+  }
+}
+
+/**
+ *
+ * @param propertyId
+ * @returns
+ */
+
+export async function fetchPropertyRating(propertyId: string) {
+  const result = await prisma.review.groupBy({
+    by: ['propertyId'],
+    _avg: {
+      rate: true,
+    },
+    _count: {
+      rate: true,
+    },
+    where: {
+      propertyId,
+    },
+  })
+
+  // empty array if no reviews
+  return {
+    rating: result[0]?._avg.rate?.toFixed(1) ?? 0,
+    count: result[0]?._count.rate ?? 0,
   }
 }

@@ -38,14 +38,15 @@ export function ImageView({
   }, [setValue, name, value])
 
   return (
-    <div className='mb-2'>
+    <div className='h-[300px] md:h-[500px] relative mt-8'>
       <Image
         onClick={openImagePicker}
         alt='Profile Image'
+        fill
+        sizes='100vw'
         src={imageUrl || defaultValue || ''}
-        width={128}
-        height={128}
-        className='w-32 h-32 object-cover border rounded-xl'
+        className=' object-cover rounded-md'
+        priority
         onLoad={() => {
           if (value && value.startsWith('blob')) {
             URL.revokeObjectURL(value)
@@ -102,7 +103,7 @@ export function ImageView({
       />
       {error && <p className=' text-red-700 text-sm'>{error}</p>}
       <div
-        className='absolute  w-32 h-32 object-cover  rounded-xl bg-transparent opacity-0  -mt-32  text-center  justify-center items-center flex z-10 hover:opacity-100 cursor-pointer'
+        className='absolute  object-cover  rounded-xl bg-transparent opacity-0  top-[300px] text-center  justify-center items-center flex z-10 hover:opacity-100 cursor-pointer'
         onClick={openImagePicker}
       >
         <p className=' font-semibold text-primary '> Edit</p>

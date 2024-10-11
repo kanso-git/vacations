@@ -15,7 +15,7 @@ export default function SubmitBtn({
   onActionLabel,
 }: Props) {
   return (
-    <Button disabled={!isValid}>
+    <Button disabled={!isValid} className='w-full'>
       <FaSpinner
         className={clsx('mr-2 h-4 w-4 ', {
           'animate-spin': isSubmitting,
