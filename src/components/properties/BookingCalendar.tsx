@@ -12,12 +12,7 @@ import * as actions from '@/actions'
 
 export function BookingCalendar({ propertyId, price }: Props) {
   const setBookingItem = useSetBookingItem()
-  const [bookingHistory, setBookingHistory] = React.useState<
-    {
-      checkIn: Date
-      checkOut: Date
-    }[]
-  >([])
+  const [bookingHistory, setBookingHistory] = React.useState<DateRange[]>([])
   const [range, setRange] = React.useState<DateRange | undefined>(undefined)
 
   React.useEffect(() => {
@@ -36,6 +31,7 @@ export function BookingCalendar({ propertyId, price }: Props) {
       defaultMonth={new Date()}
       selected={range}
       onSelect={setRange}
+      disabled={[{ before: new Date() }, ...bookingHistory]}
       className='rounded-md border '
     />
   )

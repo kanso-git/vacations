@@ -40,7 +40,6 @@ export default function BookingForm({ propertyId }: Props) {
     getValues,
     register,
     setValue,
-
     reset,
     formState: { errors, isValid, isSubmitting },
   } = formMethods
@@ -83,6 +82,10 @@ export default function BookingForm({ propertyId }: Props) {
       if (divRef.current) divRef.current.style.display = 'none'
     }
   }, [setValue, bookingItem, divRef])
+
+  useEffect(() => {
+    resetDateRange()
+  }, [propertyId, resetDateRange])
 
   useEffect(() => {
     setIsClient(true)

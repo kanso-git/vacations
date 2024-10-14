@@ -5,6 +5,7 @@ import { bookingSchema, BookingSchema } from '@/zod-schemas/bookingSchema'
 import { Booking } from '@prisma/client'
 import { getLoggedUser } from './clerk-utils'
 import prisma from '@/utils/db'
+import { DateRange } from 'react-day-picker'
 
 export async function createOneBooking(
   data: BookingSchema
@@ -41,9 +42,11 @@ export async function createOneBooking(
  * @param propertyId
  * @returns
  */
-export async function getBookingHistoryByProperty(propertyId: string) {
+export async function getBookingHistoryByProperty(
+  propertyId: string
+): Promise<DateRange[]> {
   try {
-    return prisma.booking.findMany({
+    const history = await prisma.booking.findMany({
       select: {
         checkIn: true,
         checkOut: true,
@@ -58,6 +61,12 @@ export async function getBookingHistoryByProperty(propertyId: string) {
         checkOut: 'asc',
       },
     })
+    return history.length > 0
+      ? history.map((h) => ({
+          from: h.checkIn,
+          to: h.checkOut,
+        }))
+      : []
   } catch (error) {
     console.error(error)
     throw error
